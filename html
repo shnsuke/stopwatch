@@ -12,3 +12,46 @@
   <button id="reset">リセット</button>
 </body>
 </html>
+
+const time = document.getElementById("time");
+const startButton = document.getElementById("start");
+const stopButton = document.getElementById("stop");
+const resetButton = document.getElementById("reset");
+
+let startTime = null;
+let stopTime = 0;
+
+startButton.addEventListener("click", () => {
+  startTime = Date.now();
+});
+
+stopButton.addEventListener("click", () => {
+  stopTime = Date.now() - startTime;
+});
+
+resetButton.addEventListener("click", () => {
+  startTime = null;
+  stopTime = 0;
+  time.textContent = "00:00:00.000";
+});
+
+setInterval(() => {
+  if (startTime) {
+    const now = Date.now();
+    time.textContent = formatTime(now - startTime + stopTime);
+  }
+}, 100);
+
+function formatTime(time) {
+  const hours = Math.floor(time / 3600000);
+  const minutes = Math.floor((time % 3600000) / 60000);
+  const seconds = Math.floor((time % 60000) / 1000);
+  const milliseconds = Math.floor(time % 1000);
+
+  return [
+    (hours ? hours + ":" : ""),
+    (minutes > 9 ? minutes : "0" + minutes) + ":",
+    (seconds > 9 ? seconds : "0" + seconds) + ".",
+    (milliseconds > 9 ? milliseconds : "0" + milliseconds),
+  ].join("");
+}
